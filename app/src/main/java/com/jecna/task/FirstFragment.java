@@ -36,6 +36,10 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        binding = FragmentFirstBinding.inflate(inflater, container, false);
+        dataService = new DataServiceImpl(getActivity());
+        v = binding.getRoot();
+        
         Bundle bundle = getArguments();
         if(bundle!=null) {
             TaskModel taskModel = (TaskModel) bundle.getSerializable("task");
@@ -64,10 +68,9 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
             }
         }
 
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
-        dataService = new DataServiceImpl(getActivity());
+        
         //v = inflater.inflate(R.layout.fragment_first,container,false);
-        v = binding.getRoot();
+        
         recycleView = (RecyclerView) v.findViewById(R.id.task_recycleView);
         recycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
         RecycleViewAdapter viewAdapter = new RecycleViewAdapter(getContext(), taskModelList,this);
@@ -81,6 +84,7 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
         super.onCreate(savedInstanceState);
         taskModelList = new ArrayList<TaskModel>();
         try {
+            dataService = new DataServiceImpl(getActivity());
             taskModelList = dataService.read();
 
         }catch (IOException ioe){
