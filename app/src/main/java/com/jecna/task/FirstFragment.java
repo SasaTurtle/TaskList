@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -47,22 +48,20 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
              if(taskModel.getId()==-1){
                  try {
                      dataService.create(taskModel);
+                     taskModelList = dataService.read();
                  }catch (IOException ioe){
-                     Snackbar.make(getView(), "Initial file not found", Snackbar.LENGTH_LONG)
-                             .setAction("Action", null).show();
+                     Toast.makeText(getContext(), ioe.getMessage(), Toast.LENGTH_LONG).show();
                  }catch (ClassNotFoundException c){
-                     Snackbar.make(getView(), "Class not found", Snackbar.LENGTH_LONG)
-                             .setAction("Action", null).show();
+                     Toast.makeText(getContext(), c.getMessage(), Toast.LENGTH_LONG).show();
                  }
              }else{
                  try {
                      dataService.update(taskModel);
+                     taskModelList = dataService.read();
                  }catch (IOException ioe){
-                     Snackbar.make(getView(), "Initial file not found", Snackbar.LENGTH_LONG)
-                             .setAction("Action", null).show();
+                     Toast.makeText(getContext(), ioe.getMessage(), Toast.LENGTH_LONG).show();
                  }catch (ClassNotFoundException c){
-                     Snackbar.make(getView(), "Class not found", Snackbar.LENGTH_LONG)
-                             .setAction("Action", null).show();
+                     Toast.makeText(getContext(), c.getMessage(), Toast.LENGTH_LONG).show();
                  }
              }
             }
@@ -88,15 +87,12 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
             taskModelList = dataService.read();
 
         }catch (IOException ioe){
-            Snackbar.make(getView(), "Initial file not found", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+            Toast.makeText(getContext(), ioe.getMessage(), Toast.LENGTH_LONG).show();
         }
         catch (ClassNotFoundException c){
-            Snackbar.make(getView(), "Class not found", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+            Toast.makeText(getContext(), c.getMessage(), Toast.LENGTH_LONG).show();
         }catch (Exception c){
-            //Snackbar.make(getView(), c.getMessage(), Snackbar.LENGTH_LONG)
-              //      .setAction("Action", null).show();
+            Toast.makeText(getContext(), c.getMessage(), Toast.LENGTH_LONG).show();
         }
         //read from file instead
        // taskModelList.add(new TaskModel("task 1","task 1 des",new Date(),new Date(),TaskModel.Status.NOT_STARTED,TaskModel.Priority.LOW));

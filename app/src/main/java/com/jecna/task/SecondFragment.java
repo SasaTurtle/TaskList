@@ -91,7 +91,7 @@ public class SecondFragment extends Fragment {
             public void onClick(View view) {
                 //update taskModel
                 taskModel.setName(name.getText().toString());
-                taskModel.setName(description.getText().toString());
+                taskModel.setDescription(description.getText().toString());
                 Long p = (Long)priority.getSelectedItemId();
                 taskModel.setPriority(TaskModel.Priority.values()[p.intValue()]);
                 Long s = (Long)status.getSelectedItemId();
