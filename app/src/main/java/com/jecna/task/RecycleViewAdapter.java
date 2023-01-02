@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.jecna.task.model.TaskModel;
+import com.jecna.task.service.DataService;
+import com.jecna.task.service.DataServiceImpl;
 
 import java.util.List;
 
@@ -80,6 +82,18 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         return taskModelList.size();
     }
 
+    public void removeItem(int position) {
+        this.taskModelList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void restoreItem(TaskModel item, int position) {
+        this.taskModelList.add(position, item);
+        notifyItemInserted(position);
+    }
+    public List<TaskModel> getData() {
+        return taskModelList;
+    }
     public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView name;

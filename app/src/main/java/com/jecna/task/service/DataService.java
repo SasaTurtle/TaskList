@@ -16,4 +16,6 @@ public interface DataService {
     boolean update (TaskModel task) throws IOException, ClassNotFoundException;
 
     boolean delete (int taskId) throws IOException, ClassNotFoundException;
+
+    boolean restore (TaskModel task) throws IOException, ClassNotFoundException;
 }

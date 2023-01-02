@@ -37,23 +37,23 @@ public class SecondFragment extends Fragment {
     private java.text.DateFormat dateFormat;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState ) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         dateFormat = android.text.format.DateFormat.getDateFormat(this.getActivity().getApplicationContext());
         Bundle bundle = getArguments();
-        if(bundle!=null) {
+        if (bundle != null) {
             taskModel = (TaskModel) bundle.getSerializable("task");
-            if(taskModel==null){
-                taskModel = new TaskModel("","", new Date(),new Date(), TaskModel.Status.NOT_STARTED,TaskModel.Priority.LOW);
-            }else {
+            if (taskModel == null) {
+                taskModel = new TaskModel("", "", new Date(), new Date(), TaskModel.Status.NOT_STARTED, TaskModel.Priority.LOW);
+            } else {
                 ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
                 if (actionBar != null)
-                    actionBar.setTitle(String.format("Task Id:%s",taskModel.getId()));
+                    actionBar.setTitle(String.format("Task Id:%s", taskModel.getId()));
             }
 
             isEditable = bundle.getBoolean("editable");
-        }else {
-            taskModel = new TaskModel("","", new Date(),new Date(), TaskModel.Status.NOT_STARTED,TaskModel.Priority.LOW);
+        } else {
+            taskModel = new TaskModel("", "", new Date(), new Date(), TaskModel.Status.NOT_STARTED, TaskModel.Priority.LOW);
         }
 
         binding = FragmentSecondBinding.inflate(inflater, container, false);
@@ -64,8 +64,8 @@ public class SecondFragment extends Fragment {
         description.setText(taskModel.getDescription());
         priority = (Spinner) binding.getRoot().findViewById(R.id.priorityTask);
         status = (Spinner) binding.getRoot().findViewById(R.id.statusTask);
-        String[] priorityEnum = new String[]{ "Low", "Medium","High"};
-        String[] statusEnum = new String[]{"Not Started","Ongoing","Finished"};
+        String[] priorityEnum = new String[]{"Low", "Medium", "High"};
+        String[] statusEnum = new String[]{"Not Started", "Ongoing", "Finished"};
         ArrayAdapter<String> adapterPriority = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_dropdown_item, priorityEnum);
         ArrayAdapter<String> adapterStatus = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_dropdown_item, statusEnum);
         priority.setAdapter(adapterPriority);
@@ -92,14 +92,14 @@ public class SecondFragment extends Fragment {
                 //update taskModel
                 taskModel.setName(name.getText().toString());
                 taskModel.setDescription(description.getText().toString());
-                Long p = (Long)priority.getSelectedItemId();
+                Long p = (Long) priority.getSelectedItemId();
                 taskModel.setPriority(TaskModel.Priority.values()[p.intValue()]);
-                Long s = (Long)status.getSelectedItemId();
+                Long s = (Long) status.getSelectedItemId();
                 taskModel.setStatus(TaskModel.Status.values()[s.intValue()]);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("task", taskModel);
                 NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FirstFragment,bundle);
+                        .navigate(R.id.action_SecondFragment_to_FirstFragment, bundle);
             }
         });
         binding.startDate.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +114,7 @@ public class SecondFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         Calendar newDate = Calendar.getInstance();
-                        newDate.set(year, monthOfYear, dayOfMonth,c.get(Calendar.HOUR_OF_DAY),c.get(Calendar.MINUTE));
+                        newDate.set(year, monthOfYear, dayOfMonth, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
                         String date = dateFormat.format(newDate.getTime());
                         startDate.setText(date);
                         taskModel.setDateFrom(newDate.getTime());
@@ -137,7 +137,7 @@ public class SecondFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         Calendar newDate = Calendar.getInstance();
-                        newDate.set(year, monthOfYear, dayOfMonth,c.get(Calendar.HOUR_OF_DAY),c.get(Calendar.MINUTE));
+                        newDate.set(year, monthOfYear, dayOfMonth, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE));
                         String date = dateFormat.format(newDate.getTime());
                         endDate.setText(date);
                         taskModel.setDateTo(newDate.getTime());
@@ -160,11 +160,11 @@ public class SecondFragment extends Fragment {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         Calendar newDate = Calendar.getInstance();
-                        newDate.set(currentTime.get(Calendar.YEAR),currentTime.get(Calendar.MONTH),currentTime.get(Calendar.DAY_OF_MONTH), selectedHour, selectedMinute);
-                        startTime.setText( selectedHour + ":" + selectedMinute);
+                        newDate.set(currentTime.get(Calendar.YEAR), currentTime.get(Calendar.MONTH), currentTime.get(Calendar.DAY_OF_MONTH), selectedHour, selectedMinute);
+                        startTime.setText(selectedHour + ":" + selectedMinute);
                         taskModel.setDateFrom(newDate.getTime());
                     }
-                }, hour, minute,true);
+                }, hour, minute, true);
                 mTimePicker.setTitle("Select Time");
                 mTimePicker.show();
             }
@@ -182,12 +182,12 @@ public class SecondFragment extends Fragment {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         Calendar newDate = Calendar.getInstance();
-                        endTime.setText( selectedHour + ":" + selectedMinute);
-                        newDate.set(currentTime.get(Calendar.YEAR),currentTime.get(Calendar.MONTH),currentTime.get(Calendar.DAY_OF_MONTH), selectedHour, selectedMinute);
+                        endTime.setText(selectedHour + ":" + selectedMinute);
+                        newDate.set(currentTime.get(Calendar.YEAR), currentTime.get(Calendar.MONTH), currentTime.get(Calendar.DAY_OF_MONTH), selectedHour, selectedMinute);
                         taskModel.setDateTo(newDate.getTime());
 
                     }
-                }, hour, minute,true);
+                }, hour, minute, true);
                 mTimePicker.setTitle("Select Time");
                 mTimePicker.show();
             }
