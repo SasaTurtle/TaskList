@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
@@ -41,38 +42,7 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentFirstBinding.inflate(inflater, container, false);
-        dataService = new DataServiceImpl(getActivity());
         v = binding.getRoot();
-
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            TaskModel taskModel = (TaskModel) bundle.getSerializable("task");
-            if (taskModel != null) {
-                if (taskModel.getId() == -1) {
-                    try {
-                        dataService.create(taskModel);
-                        taskModelList = dataService.read();
-                    } catch (IOException ioe) {
-                        Toast.makeText(getContext(), ioe.getMessage(), Toast.LENGTH_LONG).show();
-                    } catch (ClassNotFoundException c) {
-                        Toast.makeText(getContext(), c.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    try {
-                        dataService.update(taskModel);
-                        taskModelList = dataService.read();
-                    } catch (IOException ioe) {
-                        Toast.makeText(getContext(), ioe.getMessage(), Toast.LENGTH_LONG).show();
-                    } catch (ClassNotFoundException c) {
-                        Toast.makeText(getContext(), c.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-        }
-
-
-        //v = inflater.inflate(R.layout.fragment_first,container,false);
-
         recycleView = (RecyclerView) v.findViewById(R.id.task_recycleView);
         recycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
         RecycleViewAdapter viewAdapter = new RecycleViewAdapter(getContext(), taskModelList, this);
@@ -86,11 +56,26 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         taskModelList = new ArrayList<TaskModel>();
+
         try {
             dataService = new DataServiceImpl(getActivity());
             taskModelList = dataService.read();
+            Bundle bundle = getArguments();
+            if (bundle != null) {
+                TaskModel taskModel = (TaskModel) bundle.getSerializable("task");
+                if (taskModel != null) {
+                    if (taskModel.getId() == -1) {
+                        dataService.create(taskModel);
+                        taskModelList = dataService.read();
+                    } else {
+                        dataService.update(taskModel);
+                        taskModelList = dataService.read();
 
-        } catch (IOException ioe) {
+                    }
+                }
+            }
+        }
+        catch (IOException ioe) {
             Toast.makeText(getContext(), ioe.getMessage(), Toast.LENGTH_LONG).show();
         } catch (ClassNotFoundException c) {
             Toast.makeText(getContext(), c.getMessage(), Toast.LENGTH_LONG).show();
@@ -108,10 +93,10 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
                 bundle.getBoolean("editable", true);
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment, bundle);
+                NavHostFragment.findNavController(FirstFragment.this).navigate(R.id.action_FirstFragment_to_SecondFragment, bundle);
             }
         });
+
 
     }
 
@@ -123,17 +108,11 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
 
     @Override
     public void clickPosition(int position, int id) {
-        switch (id) {
-            case R.id.name_task:
-                TaskModel actualTask = taskModelList.get(position);
-                Bundle bundle = new Bundle();
-                bundle.getBoolean("editable", false);
-                bundle.putSerializable("task", actualTask);
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment, bundle);
-                break;
-        }
-
+        TaskModel actualTask = taskModelList.get(position);
+        Bundle bundle = new Bundle();
+        bundle.getBoolean("editable", false);
+        bundle.putSerializable("task", actualTask);
+        NavHostFragment.findNavController(FirstFragment.this).navigate(R.id.action_FirstFragment_to_SecondFragment, bundle);
     }
 
     private void enableSwipeToDeleteAndUndo(RecycleViewAdapter viewAdapter, RecyclerView recycleView) {
@@ -157,8 +136,7 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
                 }
 
 
-                Snackbar snackbar = Snackbar
-                        .make(getView(), "Item was removed from the list.", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(getView(), "Item was removed from the list.", Snackbar.LENGTH_LONG);
                 snackbar.setAction("Undo", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -169,7 +147,7 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
                         try {
                             dataService.restore(item);
                         } catch (IOException ioe) {
-                        Toast.makeText(getContext(), ioe.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), ioe.getMessage(), Toast.LENGTH_LONG).show();
                         } catch (ClassNotFoundException c) {
                             Toast.makeText(getContext(), c.getMessage(), Toast.LENGTH_LONG).show();
                         }

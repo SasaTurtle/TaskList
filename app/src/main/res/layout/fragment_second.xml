@@ -26,14 +26,18 @@
                 android:id="@+id/priorityTask"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:drawable/btn_dropdown"
-                android:spinnerMode="dropdown"/>
+                android:spinnerMode="dropdown"
+                android:popupBackground="@color/purple_700"
+                android:textColor="#ffffff"
+                />
         <Spinner
                 android:id="@+id/statusTask"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:drawable/btn_dropdown"
-                android:spinnerMode="dropdown"/>
+                android:spinnerMode="dropdown"
+                android:popupBackground="@color/purple_700"
+                android:textColor="@color/white"
+                />
 
         <TextView
                 android:text="@string/new_task_start"

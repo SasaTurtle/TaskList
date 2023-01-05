@@ -1,17 +1,15 @@
 package com.jecna.task;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
 import android.widget.TextView;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.jecna.task.model.TaskModel;
-import com.jecna.task.service.DataService;
-import com.jecna.task.service.DataServiceImpl;
+
 
 import java.util.List;
 
@@ -99,6 +97,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         TextView name;
         TextView priority;
         TextView status;
+        CardView cardView;
 
 
         public MyViewHolder(View itemView) {
@@ -110,6 +109,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             priority.setOnClickListener(this);
             status = (TextView) itemView.findViewById(R.id.status_task);
             status.setOnClickListener(this);
+            cardView = (CardView) itemView.findViewById(R.id.card_view);
+            cardView.setOnClickListener(this);
         }
         @Override
         public void onClick(View view) {

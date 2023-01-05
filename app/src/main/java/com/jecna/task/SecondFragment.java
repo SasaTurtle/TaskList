@@ -48,7 +48,7 @@ public class SecondFragment extends Fragment {
             } else {
                 ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
                 if (actionBar != null)
-                    actionBar.setTitle(String.format("Task Id:%s", taskModel.getId()));
+                    actionBar.setTitle(String.format("Edit Task"));
             }
 
             isEditable = bundle.getBoolean("editable");
@@ -78,7 +78,13 @@ public class SecondFragment extends Fragment {
         endTime = (TextView) binding.getRoot().findViewById(R.id.endTime);
         //Calendar c = Calendar.getInstance();
         startDate.setText(dateFormat.format(taskModel.getDateFrom().getTime()));
-        endDate.setText(dateFormat.format(taskModel.getDateFrom().getTime()));
+        endDate.setText(dateFormat.format(taskModel.getDateTo().getTime()));
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(taskModel.getDateFrom());
+        startTime.setText(String.format("%02d:%02d",c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE)));
+        c.setTime(taskModel.getDateTo());
+        endTime.setText(String.format("%02d:%02d",c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE)));
         return binding.getRoot();
 
     }
@@ -121,6 +127,7 @@ public class SecondFragment extends Fragment {
                     }
 
                 }, year, month, day);
+                dialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
                 dialog.show();
             }
 
@@ -144,6 +151,7 @@ public class SecondFragment extends Fragment {
                     }
 
                 }, year, month, day);
+                dialog.getDatePicker().setMinDate(taskModel.getDateFrom().getTime());
                 dialog.show();
             }
 
@@ -161,7 +169,7 @@ public class SecondFragment extends Fragment {
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         Calendar newDate = Calendar.getInstance();
                         newDate.set(currentTime.get(Calendar.YEAR), currentTime.get(Calendar.MONTH), currentTime.get(Calendar.DAY_OF_MONTH), selectedHour, selectedMinute);
-                        startTime.setText(selectedHour + ":" + selectedMinute);
+                        startTime.setText(String.format("%02d:%02d",selectedHour,selectedMinute));
                         taskModel.setDateFrom(newDate.getTime());
                     }
                 }, hour, minute, true);
@@ -182,7 +190,7 @@ public class SecondFragment extends Fragment {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         Calendar newDate = Calendar.getInstance();
-                        endTime.setText(selectedHour + ":" + selectedMinute);
+                        endTime.setText(String.format("%02d:%02d",selectedHour,selectedMinute));
                         newDate.set(currentTime.get(Calendar.YEAR), currentTime.get(Calendar.MONTH), currentTime.get(Calendar.DAY_OF_MONTH), selectedHour, selectedMinute);
                         taskModel.setDateTo(newDate.getTime());
 
