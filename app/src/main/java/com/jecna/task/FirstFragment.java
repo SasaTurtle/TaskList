@@ -46,6 +46,7 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
 
         binding = FragmentFirstBinding.inflate(inflater, container, false);
         v = binding.getRoot();
+        //Filling recycleview with tasks
         recycleView = (RecyclerView) v.findViewById(R.id.task_recycleView);
         recycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
         RecycleViewAdapter viewAdapter = new RecycleViewAdapter(getContext(), taskModelList, this);
@@ -70,6 +71,7 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
         super.onCreate(savedInstanceState);
         taskModelList = new ArrayList<TaskModel>();
 
+        //Reads, creates and updates tasks
         try {
             dataService = new DataServiceImpl(getActivity());
             taskModelList = dataService.read();
@@ -101,6 +103,7 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //Plus button, switches to second fragment
         binding.newTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,6 +122,8 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
         binding = null;
     }
 
+
+    //click on task to edit
     @Override
     public void clickPosition(int position, int id) {
         TaskModel actualTask = taskModelList.get(position);
@@ -128,6 +133,7 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
         NavHostFragment.findNavController(FirstFragment.this).navigate(R.id.action_FirstFragment_to_SecondFragment, bundle);
     }
 
+    //Swipe to delete and undo delete
     private void enableSwipeToDeleteAndUndo(RecycleViewAdapter viewAdapter, RecyclerView recycleView) {
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this.getContext()) {
             @Override

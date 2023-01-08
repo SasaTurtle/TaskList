@@ -36,6 +36,18 @@ public class SecondFragment extends Fragment {
 
     private java.text.DateFormat dateFormat;
 
+    /**
+     * Instantiatets all items in the second fragment
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -58,10 +70,13 @@ public class SecondFragment extends Fragment {
 
         binding = FragmentSecondBinding.inflate(inflater, container, false);
 
+        //Sets edit boxes
         name = (EditText) binding.getRoot().findViewById(R.id.taskName);
         name.setText(taskModel.getName());
         description = (EditText) binding.getRoot().findViewById(R.id.taskDescription);
         description.setText(taskModel.getDescription());
+
+        //Sets dropdowns
         priority = (Spinner) binding.getRoot().findViewById(R.id.priorityTask);
         status = (Spinner) binding.getRoot().findViewById(R.id.statusTask);
         String[] priorityEnum = new String[]{"Low", "Medium", "High"};
@@ -72,14 +87,16 @@ public class SecondFragment extends Fragment {
         status.setAdapter(adapterStatus);
         status.setSelection(taskModel.getStatus().getValue());
         priority.setSelection(taskModel.getPriority().getValue());
+
+        //Sets date
         startDate = (TextView) binding.getRoot().findViewById(R.id.startDate);
         endDate = (TextView) binding.getRoot().findViewById(R.id.endDate);
         startTime = (TextView) binding.getRoot().findViewById(R.id.startTime);
         endTime = (TextView) binding.getRoot().findViewById(R.id.endTime);
-        //Calendar c = Calendar.getInstance();
         startDate.setText(dateFormat.format(taskModel.getDateFrom().getTime()));
         endDate.setText(dateFormat.format(taskModel.getDateTo().getTime()));
 
+        //Sets time
         Calendar c = Calendar.getInstance();
         c.setTime(taskModel.getDateFrom());
         startTime.setText(String.format("%02d:%02d",c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE)));
@@ -92,6 +109,7 @@ public class SecondFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //Save button on click
         binding.buttonSecond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,6 +126,8 @@ public class SecondFragment extends Fragment {
                         .navigate(R.id.action_SecondFragment_to_FirstFragment, bundle);
             }
         });
+
+        //Date calendar on click
         binding.startDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,6 +137,8 @@ public class SecondFragment extends Fragment {
                 int month = c.get(Calendar.MONTH);
                 int day = c.get(Calendar.DAY_OF_MONTH);
                 DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+
+                    //Ok button in calendar
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         Calendar newDate = Calendar.getInstance();
@@ -132,6 +154,8 @@ public class SecondFragment extends Fragment {
             }
 
         });
+
+        //Date calendar on click
         binding.endDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -156,6 +180,8 @@ public class SecondFragment extends Fragment {
             }
 
         });
+
+        //Time clock on click
         binding.startTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -178,6 +204,7 @@ public class SecondFragment extends Fragment {
             }
         });
 
+        //Time clock on click
         binding.endTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

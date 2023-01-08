@@ -1,6 +1,6 @@
 package com.jecna.task.service;
 
-
+//Data interface
 
 import com.jecna.task.model.TaskModel;
 

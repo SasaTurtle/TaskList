@@ -33,6 +33,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         return myViewHolder;
     }
 
+    //Set colors for priority and status
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
@@ -92,6 +93,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public List<TaskModel> getData() {
         return taskModelList;
     }
+
+    //Recycle view adapter, this will show up in the recycle view
     public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView name;

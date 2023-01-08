@@ -2,6 +2,9 @@ package com.jecna.task;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -10,6 +13,8 @@ import com.jecna.task.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,15 +50,35 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        firstFragment = (FirstFragment) getSupportFragmentManager().findFragmentByTag("FirstFragment");//.findFragmentById(R.id.FirstFragment);
-        //noinspection SimplifiableIfStatement
+        int sort = 0;
         if (id == R.id.sort_by_priority) {
-            firstFragment.setSort(1);
+           sort=1;
         }
         if (id == R.id.sort_from_aZ) {
-            firstFragment.setSort(2);
+            sort = 2;
+        }
+        /*
+        FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+
+
+        firstFragment = (FirstFragment) getSupportFragmentManager().findFragmentByTag("FirstFragment");//.findFragmentById(R.id.FirstFragment);
+        //noinspection SimplifiableIfStatement
+        if(firstFragment!=null) {
+           firstFragment.setSort(sort);
+
+        }
+        else{
+            FragmentTransaction fragTrans = fragmentManager.beginTransaction();
+            FirstFragment firstFragment1 = new FirstFragment();
+            firstFragment1.setSort(sort);
+            fragTrans.replace(android.R.id.content, firstFragment1);
+            fragTrans.addToBackStack(null);
+            fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            fragTrans.commit();
         }
 
+         */
         return super.onOptionsItemSelected(item);
     }
 
