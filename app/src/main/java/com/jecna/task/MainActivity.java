@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+    private FirstFragment firstFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
     }
 
     @Override
@@ -43,10 +45,13 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        firstFragment = (FirstFragment) getSupportFragmentManager().findFragmentByTag("FirstFragment");//.findFragmentById(R.id.FirstFragment);
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.sort_by_priority) {
+            firstFragment.setSort(1);
+        }
+        if (id == R.id.sort_from_aZ) {
+            firstFragment.setSort(2);
         }
 
         return super.onOptionsItemSelected(item);

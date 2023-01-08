@@ -27,7 +27,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:spinnerMode="dropdown"
-                android:popupBackground="@color/purple_700"
                 android:textColor="#ffffff"
                 />
         <Spinner
@@ -35,7 +34,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:spinnerMode="dropdown"
-                android:popupBackground="@color/purple_700"
                 android:textColor="@color/white"
                 />
 
