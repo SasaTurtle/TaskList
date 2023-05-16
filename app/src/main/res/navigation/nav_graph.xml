@@ -29,4 +29,12 @@
                 app:enterAnim="@anim/exit_to_right"
                 app:exitAnim="@anim/exit_to_right"/>
     </fragment>
+    <fragment
+            android:id="@+id/LoginTabFragment"
+            android:name="com.jecna.task.ui.login.LoginTabFragment"
+            android:label="@string/second_fragment_label"
+            tools:layout="@layout/fragment_second">
+
+
+    </fragment>
 </navigation>

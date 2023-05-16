@@ -1,5 +1,6 @@
 package com.jecna.task;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -13,6 +14,7 @@ import com.jecna.task.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import com.jecna.task.ui.login.LoginTabFragment;
 
 import java.util.List;
 
@@ -56,6 +58,21 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.sort_from_aZ) {
             sort = 2;
+        }
+        if (id == R.id.login) {
+            Intent switchActivityIntent = new Intent(this, LoginActivity.class);
+            startActivity(switchActivityIntent);
+
+            /*
+            FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
+            //List<Fragment> fragments = fragmentManager.getFragments();
+            FragmentTransaction fragTrans = fragmentManager.beginTransaction();
+            LoginTabFragment loginTabFragment = new LoginTabFragment();
+            fragTrans.replace(android.R.id.content, loginTabFragment);
+            fragTrans.addToBackStack(null);
+            fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            fragTrans.commit();
+             */
         }
         /*
         FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();

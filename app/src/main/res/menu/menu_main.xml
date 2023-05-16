@@ -10,4 +10,8 @@
           android:title="Sort From A-Z"
           android:orderInCategory="101"
           app:showAsAction="never"/>
+    <item android:id="@+id/login"
+          android:title="Login"
+          android:orderInCategory="102"
+          app:showAsAction="never"/>
 </menu>
