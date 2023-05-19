@@ -31,7 +31,7 @@ public class ServerClientImpl {
         this.registerListener = registerListener;
     }
 
-    public void setLoginListener(LoginListener registerListener) {
+    public void setLoginListener(LoginListener loginListener) {
         this.loginListener = loginListener;
     }
 
@@ -59,10 +59,10 @@ public class ServerClientImpl {
             @Override
             public void onResponse(Call<LoginResponseDTO> call, Response<LoginResponseDTO> response) {
                 if (response.code() == 200) {
-                    //if (loginListener != null) {
+                    if (loginListener != null) {
                         LoginResponseDTO user = (LoginResponseDTO) response.body();
                         loginListener.onLoginFinish(user);
-                   // }
+                    }
                 }
             }
 
@@ -90,9 +90,6 @@ public class ServerClientImpl {
 
                 }
             }
-
-            ;
-
 
             @Override
             public void onFailure(Call<RegisterResponseDTO> call, Throwable t) {

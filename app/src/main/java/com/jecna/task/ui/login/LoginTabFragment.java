@@ -63,12 +63,15 @@ public class LoginTabFragment extends Fragment {
                 String loginEmail = email.getText().toString();
                 String loginPassword = password.getText().toString();
                 ServerClientImpl serverClient = new ServerClientImpl();
-                serverClient.setLoginListener(user -> {
-                    CredentialsService credentialsService = new CredentailsServiceImpl(getContext());
-                    credentialsService.WriteFile(new LoginDTO(loginEmail,loginPassword));
-                    Intent switchActivityIntent = new Intent(getActivity(), MainActivity.class);
-                    startActivity(switchActivityIntent);
-                    Toast.makeText(getContext(), "user is logged", Toast.LENGTH_LONG).show();
+                serverClient.setLoginListener(new ServerClientImpl.LoginListener() {
+                    @Override
+                    public void onLoginFinish(LoginResponseDTO user) {
+                        CredentialsService credentialsService = new CredentailsServiceImpl(getContext());
+                        credentialsService.WriteFile(new LoginDTO(loginEmail,loginPassword));
+                        Intent switchActivityIntent = new Intent(getActivity(), MainActivity.class);
+                        startActivity(switchActivityIntent);
+                        Toast.makeText(getContext(), "user is logged", Toast.LENGTH_LONG).show();
+                    }
                 });
                 serverClient.Login(new LoginDTO(loginEmail,loginPassword));
                // Toast.makeText(getContext(), loginEmail, Toast.LENGTH_LONG).show();
