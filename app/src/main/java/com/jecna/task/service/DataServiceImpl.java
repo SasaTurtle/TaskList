@@ -121,11 +121,15 @@ public class DataServiceImpl implements DataService {
      */
     private List<TaskModel> readSerialData() throws IOException, ClassNotFoundException {
         List<TaskModel> taskModel;
-        FileInputStream fos = owner.openFileInput("taskList.dat");
-        ObjectInputStream objOut = new ObjectInputStream(fos);
-        taskModel = (List<TaskModel>) objOut.readObject();
-        objOut.close();
-        fos.close();
+        try {
+            FileInputStream fos = owner.openFileInput("taskList.dat");
+            ObjectInputStream objOut = new ObjectInputStream(fos);
+            taskModel = (List<TaskModel>) objOut.readObject();
+            objOut.close();
+            fos.close();
+        }catch (Exception e){
+            taskModel = new ArrayList<TaskModel>();
+        }
         return taskModel;
     }
 

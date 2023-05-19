@@ -37,4 +37,19 @@
 
 
     </fragment>
+
+    <fragment
+            android:id="@+id/RegisterTabFragment"
+            android:name="com.jecna.task.ui.login.RegisterTabFragment"
+            android:label="@string/second_fragment_label"
+            tools:layout="@layout/fragment_second">
+
+        <action
+                android:id="@+id/action_RegisterToLogin"
+                app:destination="@id/LoginTabFragment"
+                app:enterAnim="@anim/exit_to_left"
+                app:exitAnim="@anim/exit_to_left"/>
+
+
+    </fragment>
 </navigation>

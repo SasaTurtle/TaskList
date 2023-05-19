@@ -2,16 +2,12 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.jecna.task.MainActivity">
-    <item android:id="@+id/sort_by_priority"
-          android:title="Sort By Priority"
-          android:orderInCategory="100"
-          app:showAsAction="never"/>
-    <item android:id="@+id/sort_from_aZ"
-          android:title="Sort From A-Z"
-          android:orderInCategory="101"
-          app:showAsAction="never"/>
     <item android:id="@+id/login"
-          android:title="Login"
+          android:title="Login or Register"
           android:orderInCategory="102"
+          app:showAsAction="never"/>
+    <item android:id="@+id/logout"
+          android:title="Logout"
+          android:orderInCategory="103"
           app:showAsAction="never"/>
 </menu>

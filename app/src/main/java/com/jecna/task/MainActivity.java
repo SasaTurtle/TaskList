@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
-    private FirstFragment firstFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,50 +51,13 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        int sort = 0;
-        if (id == R.id.sort_by_priority) {
-           sort=1;
-        }
-        if (id == R.id.sort_from_aZ) {
-            sort = 2;
-        }
         if (id == R.id.login) {
             Intent switchActivityIntent = new Intent(this, LoginActivity.class);
             startActivity(switchActivityIntent);
-
-            /*
-            FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
-            //List<Fragment> fragments = fragmentManager.getFragments();
-            FragmentTransaction fragTrans = fragmentManager.beginTransaction();
-            LoginTabFragment loginTabFragment = new LoginTabFragment();
-            fragTrans.replace(android.R.id.content, loginTabFragment);
-            fragTrans.addToBackStack(null);
-            fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            fragTrans.commit();
-             */
         }
-        /*
-        FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
-        List<Fragment> fragments = fragmentManager.getFragments();
-
-
-        firstFragment = (FirstFragment) getSupportFragmentManager().findFragmentByTag("FirstFragment");//.findFragmentById(R.id.FirstFragment);
-        //noinspection SimplifiableIfStatement
-        if(firstFragment!=null) {
-           firstFragment.setSort(sort);
+        if (id == R.id.logout) {
 
         }
-        else{
-            FragmentTransaction fragTrans = fragmentManager.beginTransaction();
-            FirstFragment firstFragment1 = new FirstFragment();
-            firstFragment1.setSort(sort);
-            fragTrans.replace(android.R.id.content, firstFragment1);
-            fragTrans.addToBackStack(null);
-            fragTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            fragTrans.commit();
-        }
-
-         */
         return super.onOptionsItemSelected(item);
     }
 
