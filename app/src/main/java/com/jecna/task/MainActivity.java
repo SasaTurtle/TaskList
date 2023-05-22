@@ -14,6 +14,9 @@ import com.jecna.task.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import com.jecna.task.model.LoginDTO;
+import com.jecna.task.service.CredentailsServiceImpl;
+import com.jecna.task.service.CredentialsService;
 import com.jecna.task.ui.login.LoginTabFragment;
 
 import java.util.List;
@@ -35,6 +38,13 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
+        CredentialsService credentialsService =new CredentailsServiceImpl(getApplicationContext());
+        LoginDTO loginDTO =  credentialsService.ReadFile();
+        if(loginDTO==null){
+            Intent switchActivityIntent = new Intent(this, LoginActivity.class);
+            startActivity(switchActivityIntent);
+        }
 
     }
 

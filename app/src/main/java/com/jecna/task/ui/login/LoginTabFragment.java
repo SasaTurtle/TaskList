@@ -15,10 +15,7 @@ import com.jecna.task.R;
 import com.jecna.task.databinding.LoginTabFragmentBinding;
 import com.jecna.task.model.LoginDTO;
 import com.jecna.task.model.LoginResponseDTO;
-import com.jecna.task.service.CredentailsServiceImpl;
-import com.jecna.task.service.CredentialsService;
-import com.jecna.task.service.ServerClient;
-import com.jecna.task.service.ServerClientImpl;
+import com.jecna.task.service.*;
 
 public class LoginTabFragment extends Fragment {
     float v = 0;
@@ -49,8 +46,6 @@ public class LoginTabFragment extends Fragment {
         password.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(500).start();
         login.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(700).start();
 
-
-
         return root;
     }
 
@@ -68,6 +63,8 @@ public class LoginTabFragment extends Fragment {
                     public void onLoginFinish(LoginResponseDTO user) {
                         CredentialsService credentialsService = new CredentailsServiceImpl(getContext());
                         credentialsService.WriteFile(new LoginDTO(loginEmail,loginPassword));
+                        SingetonToken singletonToken = com.jecna.task.service.SingetonToken.getInstance();
+                        singletonToken.setToken(user.getAccessToken());
                         Intent switchActivityIntent = new Intent(getActivity(), MainActivity.class);
                         startActivity(switchActivityIntent);
                         Toast.makeText(getContext(), "user is logged", Toast.LENGTH_LONG).show();

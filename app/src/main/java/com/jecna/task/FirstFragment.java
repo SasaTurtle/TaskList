@@ -27,6 +27,7 @@ import com.jecna.task.databinding.FragmentFirstBinding;
 import com.jecna.task.model.TaskModel;
 import com.jecna.task.service.DataService;
 import com.jecna.task.service.DataServiceImpl;
+import com.jecna.task.service.SingetonToken;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -87,6 +88,10 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
                         taskModelList = dataService.read();
 
                     }
+
+                    SingetonToken singletonToken = com.jecna.task.service.SingetonToken.getInstance();
+                    String token = singletonToken.getToken();
+
                 }
             }
         }
