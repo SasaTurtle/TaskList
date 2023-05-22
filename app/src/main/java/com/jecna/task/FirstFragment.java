@@ -1,5 +1,6 @@
 package com.jecna.task;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,12 +25,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import com.jecna.task.databinding.FragmentFirstBinding;
+import com.jecna.task.model.TaskDTO;
 import com.jecna.task.model.TaskModel;
 import com.jecna.task.service.DataService;
 import com.jecna.task.service.DataServiceImpl;
+import com.jecna.task.service.ServerClientImpl;
 import com.jecna.task.service.SingetonToken;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -58,29 +62,26 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
     }
 
 
-    public void setSort(int sortId) {
-        switch (sortId){
-            case 1: break;
-            case 2: break;
-            default: break;
-        }
-    }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         taskModelList = new ArrayList<TaskModel>();
+        SingetonToken singletonToken = com.jecna.task.service.SingetonToken.getInstance();
+        String token = singletonToken.getToken();
+        ServerClientImpl serverClient = new ServerClientImpl(token);
+
 
         //Reads, creates and updates tasks
         try {
             dataService = new DataServiceImpl(getActivity());
+            TaskDTO[] taskFromServer = serverClient.ReadTask();
             taskModelList = dataService.read();
             Bundle bundle = getArguments();
             if (bundle != null) {
                 TaskModel taskModel = (TaskModel) bundle.getSerializable("task");
                 if (taskModel != null) {
-                    if (taskModel.getId() == -1) {
+                    if (taskModel.getId() == null) {
                         dataService.create(taskModel);
                         taskModelList = dataService.read();
                     } else {
@@ -89,8 +90,20 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
 
                     }
 
-                    SingetonToken singletonToken = com.jecna.task.service.SingetonToken.getInstance();
-                    String token = singletonToken.getToken();
+
+                    serverClient.setSaveTaskListener(new ServerClientImpl.SaveTaskListener() {
+                        @Override
+                        public void onSaveTaskFinish() {
+                            Toast.makeText(getContext(), "Task saved", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                    SimpleDateFormat DateFor = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
+                    TaskDTO taskDTO = new TaskDTO(taskModel.getId(),taskModel.getName(),taskModel.getDescription(),DateFor.format(taskModel.getDateFrom()),DateFor.format(taskModel.getDateTo()),taskModel.getStatus().getValue(),taskModel.getPriority().getValue());
+                    TaskDTO[] taskDTOs = new TaskDTO[1];
+                    taskDTOs[0]=taskDTO;
+                    serverClient.SaveTask(taskDTOs);
 
                 }
             }

@@ -67,7 +67,7 @@ public class LoginTabFragment extends Fragment {
                         singletonToken.setToken(user.getAccessToken());
                         Intent switchActivityIntent = new Intent(getActivity(), MainActivity.class);
                         startActivity(switchActivityIntent);
-                        Toast.makeText(getContext(), "user is logged", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Welcome back User!", Toast.LENGTH_LONG).show();
                     }
                 });
                 serverClient.Login(new LoginDTO(loginEmail,loginPassword));

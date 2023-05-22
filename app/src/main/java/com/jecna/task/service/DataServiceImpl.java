@@ -7,10 +7,7 @@ import com.jecna.task.model.TaskModel;
 
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class DataServiceImpl implements DataService {
     private Activity owner;
@@ -31,12 +28,11 @@ public class DataServiceImpl implements DataService {
      * @throws IOException
      */
     @Override
-    public int create(TaskModel task) throws IOException {
+    public UUID create(TaskModel task) throws IOException {
         List<TaskModel> taskModels = new ArrayList<>();
         int maxId = 0;
         try {
             taskModels = readSerialData();
-            maxId = maxID(taskModels)+1;
         }
         catch (IOException ioe){
             ioe.printStackTrace();
@@ -44,10 +40,11 @@ public class DataServiceImpl implements DataService {
         catch (ClassNotFoundException c){
             c.printStackTrace();
         }
-        task.setId(maxId);
+        UUID newUUID = UUID.randomUUID();
+        task.setId(newUUID);
         taskModels.add(task);
         writeSerialData(taskModels);
-        return maxId;
+        return newUUID;
     }
 
     /***
@@ -78,7 +75,7 @@ public class DataServiceImpl implements DataService {
      * @throws ClassNotFoundException
      */
     @Override
-    public boolean delete(int taskId) throws IOException, ClassNotFoundException {
+    public boolean delete(UUID taskId) throws IOException, ClassNotFoundException {
         List<TaskModel> taskModels = readSerialData();
         TaskModel t = findTaskByID(taskModels,taskId);
         if(t!=null) {
@@ -147,18 +144,6 @@ public class DataServiceImpl implements DataService {
         fos.close();
     }
 
-    /***
-     * Finds the highest task id
-     * @param taskModels
-     * @return
-     */
-    private int maxID (List<TaskModel> taskModels) {
-        TaskModel maxTask = taskModels
-                .stream()
-                .max(Comparator.comparing(TaskModel::getId))
-                .orElseThrow(NoSuchElementException::new);
-        return maxTask.getId();
-    }
 
     /***
      * Finds given task by its id
@@ -166,10 +151,10 @@ public class DataServiceImpl implements DataService {
      * @param taskID
      * @return
      */
-    private TaskModel findTaskByID (List<TaskModel> taskModels,int taskID) {
+    private TaskModel findTaskByID (List<TaskModel> taskModels,UUID taskID) {
         TaskModel task = taskModels
                 .stream()
-                .filter(t -> taskID == t.getId()).findFirst().orElse(null);
+                .filter(t -> taskID.equals(t.getId())).findFirst().orElse(null);
         return task;
     }
 }

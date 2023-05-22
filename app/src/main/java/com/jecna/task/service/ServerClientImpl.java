@@ -22,8 +22,18 @@ public class ServerClientImpl {
         public void onLoginFinish(LoginResponseDTO user);
     }
 
+    public interface SaveTaskListener {
+        public void onSaveTaskFinish();
+    }
+
+    public interface ReadTaskListener {
+        public void onReadTaskFinish(TaskDTO[] taskDTOS);
+    }
+
     private RegisterListener registerListener;
     private LoginListener loginListener;
+    private SaveTaskListener saveTaskListener;
+    private ReadTaskListener readTaskListener;
 
 
     // Assign the listener implementing events interface that will receive the events
@@ -35,11 +45,32 @@ public class ServerClientImpl {
         this.loginListener = loginListener;
     }
 
+    public void setSaveTaskListener(SaveTaskListener saveTaskListener) {
+        this.saveTaskListener = saveTaskListener;
+    }
+    public void setReadTaskListener(ReadTaskListener readTaskListener) {
+        this.readTaskListener = readTaskListener;
+    }
+
     public ServerClientImpl() {
         this.registerListener = null;
         this.loginListener = null;
+        this.saveTaskListener = null;
+        this.readTaskListener = null;
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl("https://secret-river-54565.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+    }
+
+    public ServerClientImpl(String token) {
+        this.registerListener = null;
+        this.loginListener = null;
+        this.saveTaskListener = null;
+        this.readTaskListener = null;
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(new TokenInterceptor(getToken()))
+                .addInterceptor(new TokenInterceptor(token))
                 .build();
 
 
@@ -99,25 +130,17 @@ public class ServerClientImpl {
     }
 
     //@Override
-    public void ReadTask() {
+    public TaskDTO[] ReadTask() {
         IUserCall client = retrofit.create(IUserCall.class);
         Call<TaskDTO[]> call = client.readTask();
-        System.out.println(call.toString());
-        call.enqueue(new Callback<TaskDTO[]>() {
-            @Override
-            public void onResponse(Call<TaskDTO[]> call, Response<TaskDTO[]> response) {
-                TaskDTO[] returnTasks = response.body();
-                for (TaskDTO t : returnTasks) {
-                    System.out.println(t.toString());
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<TaskDTO[]> call, Throwable t) {
-                System.out.println("Not Saved " + t.toString());
-            }
-        });
+        try {
+            Response<TaskDTO[]> response = call.execute();
+            return response.body();
+        }
+        catch (Exception ex)
+        {
+            return new TaskDTO[0];
+        }
     }
 
     //@Override
@@ -128,7 +151,8 @@ public class ServerClientImpl {
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                System.out.println("Saved");
+
+                saveTaskListener.onSaveTaskFinish();
             }
 
             @Override
@@ -138,7 +162,5 @@ public class ServerClientImpl {
         });
     }
 
-    private String getToken() {
-        return "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzYXNjaGEua29taW5la0BnbWFpbC5jb20iLCJpYXQiOjE2ODQzMzMxMzAsImV4cCI6MTY4NDQxOTUzMH0.TSGlQgGfbCjtTCmyRFSqDn2suhGyUFI2y5oL0wpOFv1oyidhfs0pBSOikPjThcT5nqbiK24cPyAEUjWyWJmfLQ";
-    }
+
 }

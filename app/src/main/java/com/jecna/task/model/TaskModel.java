@@ -2,10 +2,7 @@ package com.jecna.task.model;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class TaskModel implements Serializable {
 
@@ -58,7 +55,7 @@ public class TaskModel implements Serializable {
         }
     }
 
-    private int id;
+    private UUID id;
     private String name;
     private String description;
     private Date dateFrom;
@@ -69,7 +66,7 @@ public class TaskModel implements Serializable {
 
 
     public TaskModel(String name, String description, Date dateFrom, Date dateTo, Status status, Priority priority) {
-        this.id=-1;
+        this.id=null;
         this.name = name;
         this.description = description;
         this.dateFrom = dateFrom;
@@ -78,10 +75,10 @@ public class TaskModel implements Serializable {
         this.priority = priority;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

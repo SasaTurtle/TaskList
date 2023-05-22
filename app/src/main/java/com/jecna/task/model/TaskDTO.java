@@ -1,7 +1,9 @@
 package com.jecna.task.model;
 
+import java.util.UUID;
+
 public class TaskDTO {
-     Integer id;
+     UUID id;
      String  name;
      String description;
      //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss")
@@ -11,7 +13,7 @@ public class TaskDTO {
      Integer status;
      Integer priority;
 
-    public TaskDTO(Integer id, String name, String description, String dateFrom, String dateTo, Integer status, Integer priority) {
+    public TaskDTO(UUID id, String name, String description, String dateFrom, String dateTo, Integer status, Integer priority) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -21,11 +23,11 @@ public class TaskDTO {
         this.priority = priority;
     }
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

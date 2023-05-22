@@ -87,7 +87,6 @@ public class RegisterTabFragment extends Fragment{
                 });
 
                 serverClient.Register(new RegisterDTO(registerEmail,registerEmail,new String[]{"ROLE_USER"},registerPassword));
-               // Toast.makeText(getContext(), loginEmail, Toast.LENGTH_LONG).show();
             }
         });
     }
