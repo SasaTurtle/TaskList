@@ -8,13 +8,16 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.io.IOException;
+import java.text.ParseException;
+
 //https://guides.codepath.com/android/Creating-Custom-Listeners
 public class ServerClientImpl {
 
     private Retrofit retrofit;
 
     public interface RegisterListener {
-        public void onRegisterFinish(LoginDTO login);
+        public void onRegisterFinish(LoginResponseDTO login);
 
     }
 
@@ -27,7 +30,7 @@ public class ServerClientImpl {
     }
 
     public interface ReadTaskListener {
-        public void onReadTaskFinish(TaskDTO[] taskDTOS);
+        public void onReadTaskFinish(TaskDTO[] taskDTOS) throws IOException, ParseException, ClassNotFoundException;
     }
 
     private RegisterListener registerListener;
@@ -103,6 +106,20 @@ public class ServerClientImpl {
             }
         });
     }
+    private LoginResponseDTO LoginSynch(LoginDTO loginDTO) {
+        IUserCall client = retrofit.create(IUserCall.class);
+        Call<LoginResponseDTO> call = client.loginUser(loginDTO);
+        System.out.println(call.toString());
+        try {
+            Response<LoginResponseDTO> response = call.execute();
+            return response.body();
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+
+    }
 
     //@Override
     public void Register(RegisterDTO registerDTO) {
@@ -114,7 +131,8 @@ public class ServerClientImpl {
             public void onResponse(Call<RegisterResponseDTO> call, Response<RegisterResponseDTO> response) {
                 if (response.code() == 200) {
                     if (registerListener != null) {
-                        registerListener.onRegisterFinish(new LoginDTO(registerDTO.getUsername(), registerDTO.getPassword()));
+                        LoginResponseDTO loginResponseDTO = LoginSynch(new LoginDTO(registerDTO.getUsername(), registerDTO.getPassword()));
+                        registerListener.onRegisterFinish(loginResponseDTO);
                     }else {
                         registerListener.onRegisterFinish(null);
                     }
@@ -130,7 +148,7 @@ public class ServerClientImpl {
     }
 
     //@Override
-    public TaskDTO[] ReadTask() {
+    public TaskDTO[] ReadTaskSync() {
         IUserCall client = retrofit.create(IUserCall.class);
         Call<TaskDTO[]> call = client.readTask();
         try {
@@ -141,6 +159,35 @@ public class ServerClientImpl {
         {
             return new TaskDTO[0];
         }
+    }
+    public void ReadTask() {
+        IUserCall client = retrofit.create(IUserCall.class);
+        Call<TaskDTO[]> call = client.readTask();
+        call.enqueue(new Callback<TaskDTO[]>() {
+            @Override
+            public void onResponse(Call<TaskDTO[]> call, Response<TaskDTO[]> response) {
+                if (response.code() == 200) {
+                    if (readTaskListener != null) {
+                            TaskDTO[] resultTaskDTO = response.body();
+                        try {
+                            readTaskListener.onReadTaskFinish(resultTaskDTO);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        } catch (ClassNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TaskDTO[]> call, Throwable t) {
+                System.out.println(t.toString());
+            }
+        });
     }
 
     //@Override

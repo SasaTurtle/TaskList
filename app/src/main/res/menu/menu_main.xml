@@ -10,4 +10,8 @@
           android:title="Logout"
           android:orderInCategory="103"
           app:showAsAction="never"/>
+    <item android:id="@+id/synch"
+          android:title="Synchronize tasks"
+          android:orderInCategory="104"
+          app:showAsAction="never"/>
 </menu>

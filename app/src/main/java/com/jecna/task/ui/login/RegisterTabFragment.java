@@ -19,10 +19,7 @@ import com.jecna.task.databinding.RegisterTabFragmentBinding;
 import com.jecna.task.model.LoginDTO;
 import com.jecna.task.model.LoginResponseDTO;
 import com.jecna.task.model.RegisterDTO;
-import com.jecna.task.service.CredentailsServiceImpl;
-import com.jecna.task.service.CredentialsService;
-import com.jecna.task.service.ServerClient;
-import com.jecna.task.service.ServerClientImpl;
+import com.jecna.task.service.*;
 
 public class RegisterTabFragment extends Fragment{
 
@@ -71,10 +68,12 @@ public class RegisterTabFragment extends Fragment{
                 ServerClientImpl serverClient = new ServerClientImpl();
                 serverClient.setRegisterListener(new ServerClientImpl.RegisterListener(){
                     @Override
-                    public void onRegisterFinish(LoginDTO login){
+                    public void onRegisterFinish(LoginResponseDTO login){
                         if(login!=null){
                             CredentialsService credentialsService = new CredentailsServiceImpl(getContext());
-                            credentialsService.WriteFile(login);
+                            credentialsService.WriteFile(new LoginDTO(registerEmail,registerPassword));
+                            SingetonToken singletonToken = com.jecna.task.service.SingetonToken.getInstance();
+                            singletonToken.setToken(login.getAccessToken());
                             Bundle bundle = new Bundle();
                             bundle.getSerializable("user");
                             NavHostFragment.findNavController(RegisterTabFragment.this).navigate(R.id.action_RegisterToLogin, bundle);

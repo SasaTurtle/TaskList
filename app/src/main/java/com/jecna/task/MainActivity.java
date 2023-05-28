@@ -1,11 +1,13 @@
 package com.jecna.task;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -15,10 +17,13 @@ import com.jecna.task.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.jecna.task.model.LoginDTO;
-import com.jecna.task.service.CredentailsServiceImpl;
-import com.jecna.task.service.CredentialsService;
+import com.jecna.task.model.LoginResponseDTO;
+import com.jecna.task.model.TaskDTO;
+import com.jecna.task.service.*;
 import com.jecna.task.ui.login.LoginTabFragment;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,6 +49,17 @@ public class MainActivity extends AppCompatActivity {
         if(loginDTO==null){
             Intent switchActivityIntent = new Intent(this, LoginActivity.class);
             startActivity(switchActivityIntent);
+        }else{
+            ServerClientImpl serverClient = new ServerClientImpl();
+            serverClient.setLoginListener(new ServerClientImpl.LoginListener() {
+                @Override
+                public void onLoginFinish(LoginResponseDTO user) {
+                    SingetonToken singletonToken = com.jecna.task.service.SingetonToken.getInstance();
+                    singletonToken.setToken(user.getAccessToken());
+                    //Toast.makeText(this, "User is logged", Toast.LENGTH_LONG).show();
+                }
+            });
+            serverClient.Login(loginDTO);
         }
 
     }
@@ -67,6 +83,32 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.logout) {
 
+        }
+        if (id == R.id.synch) {
+            SingetonToken singletonToken = com.jecna.task.service.SingetonToken.getInstance();
+            String token = singletonToken.getToken();
+            ServerClientImpl serverClient = new ServerClientImpl(token);
+            Activity a = this;
+            serverClient.setReadTaskListener(new ServerClientImpl.ReadTaskListener() {
+                @Override
+                public void onReadTaskFinish(TaskDTO[] taskDTOS) throws IOException, ParseException, ClassNotFoundException {
+                    DataService dataService = new DataServiceImpl(a);
+                    dataService.synchTasks(taskDTOS);
+
+                    Fragment currentFragment = a.getFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
+
+                    //if (currentFragment instanceof FirstFragment) {
+                        FragmentTransaction fragTransaction =   (a).getFragmentManager().beginTransaction();
+                        fragTransaction.detach(currentFragment);
+                        fragTransaction.attach(currentFragment);
+                        fragTransaction.commit();
+                    //}
+
+
+                }
+            });
+            serverClient.ReadTask();
+            Toast.makeText(this,"Tasks synchronized from server", Toast.LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
     }

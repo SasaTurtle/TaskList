@@ -71,7 +71,6 @@ public class LoginTabFragment extends Fragment {
                     }
                 });
                 serverClient.Login(new LoginDTO(loginEmail,loginPassword));
-               // Toast.makeText(getContext(), loginEmail, Toast.LENGTH_LONG).show();
             }
         });
     }

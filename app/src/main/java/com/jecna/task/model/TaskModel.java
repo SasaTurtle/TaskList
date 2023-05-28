@@ -17,7 +17,7 @@ public class TaskModel implements Serializable {
             this.value = i;
         }
         static {
-            for (Priority pageType : Priority.values()) {
+            for (Status pageType : Status.values()) {
                 map.put(pageType.value, pageType);
             }
         }
@@ -67,6 +67,15 @@ public class TaskModel implements Serializable {
 
     public TaskModel(String name, String description, Date dateFrom, Date dateTo, Status status, Priority priority) {
         this.id=null;
+        this.name = name;
+        this.description = description;
+        this.dateFrom = dateFrom;
+        this.dateTo = dateTo;
+        this.status = status;
+        this.priority = priority;
+    }
+    public TaskModel(UUID id,String name, String description, Date dateFrom, Date dateTo, Status status, Priority priority) {
+        this.id=id;
         this.name = name;
         this.description = description;
         this.dateFrom = dateFrom;

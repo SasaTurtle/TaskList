@@ -67,15 +67,10 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         taskModelList = new ArrayList<TaskModel>();
-        SingetonToken singletonToken = com.jecna.task.service.SingetonToken.getInstance();
-        String token = singletonToken.getToken();
-        ServerClientImpl serverClient = new ServerClientImpl(token);
-
 
         //Reads, creates and updates tasks
         try {
             dataService = new DataServiceImpl(getActivity());
-            TaskDTO[] taskFromServer = serverClient.ReadTask();
             taskModelList = dataService.read();
             Bundle bundle = getArguments();
             if (bundle != null) {
@@ -90,7 +85,9 @@ public class FirstFragment extends Fragment implements ListItemClickListener {
 
                     }
 
-
+                    SingetonToken singletonToken = com.jecna.task.service.SingetonToken.getInstance();
+                    String token = singletonToken.getToken();
+                    ServerClientImpl serverClient = new ServerClientImpl(token);
                     serverClient.setSaveTaskListener(new ServerClientImpl.SaveTaskListener() {
                         @Override
                         public void onSaveTaskFinish() {

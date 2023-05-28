@@ -3,11 +3,16 @@ package com.jecna.task.service;
 
 import android.app.Activity;
 import android.content.Context;
+import com.jecna.task.model.TaskDTO;
 import com.jecna.task.model.TaskModel;
 
 
 import java.io.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DataServiceImpl implements DataService {
     private Activity owner;
@@ -156,5 +161,51 @@ public class DataServiceImpl implements DataService {
                 .stream()
                 .filter(t -> taskID.equals(t.getId())).findFirst().orElse(null);
         return task;
+    }
+
+    @Override
+    public void synchTasks(TaskDTO[] taskDTOS) throws IOException, ClassNotFoundException, ParseException {
+        List<TaskModel> taskModel = readSerialData();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        for (TaskDTO t:taskDTOS){
+            boolean isHere = false;
+            for (TaskModel tm : taskModel){
+                if (t.getId().equals(tm.getId())){
+                    isHere = true;
+                }
+            }
+            if(!isHere){
+                taskModel.add(new TaskModel(t.getId(),t.getName(),t.getDescription(),new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(t.getDateFrom()),new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(t.getDateTo()),TaskModel.Status.valueOf(t.getStatus()),TaskModel.Priority.valueOf(t.getPriority())));
+            }
+        }
+        writeSerialData(taskModel);
+
+        SingetonToken singletonToken = com.jecna.task.service.SingetonToken.getInstance();
+        String token = singletonToken.getToken();
+        ServerClientImpl serverClient = new ServerClientImpl(token);
+        List<TaskDTO> taskDTOS1 = new ArrayList<TaskDTO>();
+        for(TaskModel t : taskModel){
+            boolean isThere = false;
+            for (TaskDTO td : taskDTOS) {
+                if (t.getId().equals(td.getId())){
+                    isThere = true;
+                }
+            }
+            if(!isThere) {
+                taskDTOS1.add(new TaskDTO(t.getId(),t.getName(),t.getDescription(),dateFormat.format(t.getDateFrom()), dateFormat.format(t.getDateTo()),t.getStatus().getValue(),t.getPriority().getValue()));
+            }
+        }
+        TaskDTO[] taskDTOS2 = new TaskDTO[taskDTOS1.size()];
+        taskDTOS1.toArray(taskDTOS2);
+        try {
+            serverClient.setSaveTaskListener(new ServerClientImpl.SaveTaskListener() {
+                @Override
+                public void onSaveTaskFinish() {
+
+                }
+            });
+            serverClient.SaveTask(taskDTOS2);
+        } finally {
+        }
     }
 }
