@@ -201,7 +201,7 @@ public class DataServiceImpl implements DataService {
             serverClient.setSaveTaskListener(new ServerClientImpl.SaveTaskListener() {
                 @Override
                 public void onSaveTaskFinish() {
-
+                    int a=1;
                 }
             });
             serverClient.SaveTask(taskDTOS2);

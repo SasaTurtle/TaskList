@@ -68,16 +68,25 @@ public class RegisterTabFragment extends Fragment{
                 ServerClientImpl serverClient = new ServerClientImpl();
                 serverClient.setRegisterListener(new ServerClientImpl.RegisterListener(){
                     @Override
-                    public void onRegisterFinish(LoginResponseDTO login){
+                    public void onRegisterFinish(LoginDTO login){
                         if(login!=null){
+
                             CredentialsService credentialsService = new CredentailsServiceImpl(getContext());
                             credentialsService.WriteFile(new LoginDTO(registerEmail,registerPassword));
-                            SingetonToken singletonToken = com.jecna.task.service.SingetonToken.getInstance();
-                            singletonToken.setToken(login.getAccessToken());
-                            Bundle bundle = new Bundle();
-                            bundle.getSerializable("user");
-                            NavHostFragment.findNavController(RegisterTabFragment.this).navigate(R.id.action_RegisterToLogin, bundle);
-                            Toast.makeText(getContext(),R.string.sucess_register, Toast.LENGTH_LONG).show();
+                            serverClient.setLoginListener(new ServerClientImpl.LoginListener() {
+                                @Override
+                                public void onLoginFinish(LoginResponseDTO user) {
+
+                                    SingetonToken singletonToken = com.jecna.task.service.SingetonToken.getInstance();
+                                    singletonToken.setToken(user.getAccessToken());
+                                    Bundle bundle = new Bundle();
+                                    bundle.getSerializable("user");
+                                    NavHostFragment.findNavController(RegisterTabFragment.this).navigate(R.id.action_RegisterToLogin, bundle);
+                                    Toast.makeText(getContext(),R.string.sucess_register, Toast.LENGTH_LONG).show();
+                                }
+                            });
+                            serverClient.Login(login);
+
                         }else{
                             Toast.makeText(getContext(),R.string.username_used, Toast.LENGTH_LONG).show();
                         }

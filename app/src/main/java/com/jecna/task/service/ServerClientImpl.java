@@ -17,7 +17,7 @@ public class ServerClientImpl {
     private Retrofit retrofit;
 
     public interface RegisterListener {
-        public void onRegisterFinish(LoginResponseDTO login);
+        public void onRegisterFinish(LoginDTO login);
 
     }
 
@@ -106,20 +106,7 @@ public class ServerClientImpl {
             }
         });
     }
-    private LoginResponseDTO LoginSynch(LoginDTO loginDTO) {
-        IUserCall client = retrofit.create(IUserCall.class);
-        Call<LoginResponseDTO> call = client.loginUser(loginDTO);
-        System.out.println(call.toString());
-        try {
-            Response<LoginResponseDTO> response = call.execute();
-            return response.body();
-        }
-        catch (Exception ex)
-        {
-            return null;
-        }
 
-    }
 
     //@Override
     public void Register(RegisterDTO registerDTO) {
@@ -131,8 +118,8 @@ public class ServerClientImpl {
             public void onResponse(Call<RegisterResponseDTO> call, Response<RegisterResponseDTO> response) {
                 if (response.code() == 200) {
                     if (registerListener != null) {
-                        LoginResponseDTO loginResponseDTO = LoginSynch(new LoginDTO(registerDTO.getUsername(), registerDTO.getPassword()));
-                        registerListener.onRegisterFinish(loginResponseDTO);
+                        //LoginResponseDTO loginResponseDTO = LoginSynch(new LoginDTO(registerDTO.getUsername(), registerDTO.getPassword()));
+                        registerListener.onRegisterFinish(new LoginDTO(registerDTO.getUsername(),registerDTO.getPassword()));
                     }else {
                         registerListener.onRegisterFinish(null);
                     }

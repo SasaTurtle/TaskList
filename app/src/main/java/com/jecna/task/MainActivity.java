@@ -95,13 +95,13 @@ public class MainActivity extends AppCompatActivity {
                     DataService dataService = new DataServiceImpl(a);
                     dataService.synchTasks(taskDTOS);
 
-                    Fragment currentFragment = a.getFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
+                 //   Fragment currentFragment = a.getFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
 
                     //if (currentFragment instanceof FirstFragment) {
-                        FragmentTransaction fragTransaction =   (a).getFragmentManager().beginTransaction();
-                        fragTransaction.detach(currentFragment);
-                        fragTransaction.attach(currentFragment);
-                        fragTransaction.commit();
+                     //   FragmentTransaction fragTransaction =   (a).getFragmentManager().beginTransaction();
+                     //   fragTransaction.detach(currentFragment);
+                      //  fragTransaction.attach(currentFragment);
+                      //  fragTransaction.commit();
                     //}
 
 
